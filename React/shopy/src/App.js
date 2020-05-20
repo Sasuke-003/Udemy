@@ -21,10 +21,26 @@ class App extends React.Component {
 unsubscribeFromAuth = null;
 
 componentDidMount() {
- this.unsubscribeFromAuth =  auth.onAuthStateChanged( async user => {       // this method is called whenever the state of the user changes i.e user logins or logs out
-    this.setState({ currentUser: user });                            // it takes a method as a parameter and runs it whenever called
-    createUserProfileDocument(user);                                                      // it returns a unsubscription to the firebase auth to close the auth whenever called
-    // console.log(user);                                              // here the method passed sets the currentuser(user) to the state
+ this.unsubscribeFromAuth =  auth.onAuthStateChanged( async userAuth => {       // this method is called whenever the state of the user changes i.e user logins or logs out
+                           // it takes a method as a parameter and runs it whenever called
+                                                   // it returns a unsubscription to the firebase auth to close the auth whenever called
+    if(userAuth) {
+      const userRef = await createUserProfileDocument(userAuth);   
+
+      userRef.onSnapshot(snapShot => {
+        this.setState({ currentUser: {
+          id: snapShot.id,
+          ...snapShot.data()
+        } }, () => {
+          console.log(this.state); 
+        }); 
+      })
+    }
+    else{ 
+    this.setState({ currentUser: userAuth}, () => {
+      console.log(this.state); 
+    });
+  }                                                      
   });
 }
 
