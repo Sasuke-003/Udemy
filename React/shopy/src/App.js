@@ -5,7 +5,7 @@ import HomePage from './pages/homepage/homepage.component';
 import ShopPage from './pages/shop/shop.component';
 import Header from './components/header/header.component';
 import SignInAndSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.component';
-import { auth } from './firebase/firebase.utils';
+import { auth, createUserProfileDocument } from './firebase/firebase.utils';
 
 
 class App extends React.Component {
@@ -21,15 +21,15 @@ class App extends React.Component {
 unsubscribeFromAuth = null;
 
 componentDidMount() {
- this.unsubscribeFromAuth =  auth.onAuthStateChanged(user => {
-    this.setState({ currentUser: user });
-
-    console.log(user);
+ this.unsubscribeFromAuth =  auth.onAuthStateChanged( async user => {       // this method is called whenever the state of the user changes i.e user logins or logs out
+    this.setState({ currentUser: user });                            // it takes a method as a parameter and runs it whenever called
+    createUserProfileDocument(user);                                                      // it returns a unsubscription to the firebase auth to close the auth whenever called
+    // console.log(user);                                              // here the method passed sets the currentuser(user) to the state
   });
 }
 
 componentWillUnmount() {
-  this.unsubscribeFromAuth();
+  this.unsubscribeFromAuth();                                       // unsubscribes the firebase auth
 }
 
 
