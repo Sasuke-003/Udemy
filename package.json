@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "firebase": "^7.14.4"
+    "firebase": "^7.14.4",
+    "textmagic-rest-client": "^1.0.10",
+    "twilio": "^3.43.1"
   }
 }
